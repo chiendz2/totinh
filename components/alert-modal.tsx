@@ -22,7 +22,7 @@ export default function AlertModal() {
   };
 
   const handleSubmit = () => {
-    window.location.href = "https://www.facebook.com/NghiaDai99/";
+    onOpenClose.onClose();
   };
 
   return (
