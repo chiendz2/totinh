@@ -2,7 +2,6 @@
 
 import Image from "next/image";
 import { ArrowDown, Heart, Music2, Pause, Sparkles } from "lucide-react";
-import * as Dialog from "@radix-ui/react-dialog";
 import { useEffect, useRef, useState } from "react";
 
 const promises = ["Luôn lắng nghe những điều Diễm muốn kể", "Cùng Diễm đi qua cả ngày nắng lẫn ngày mưa", "Trân trọng từng khoảnh khắc của hai đứa mình"];
@@ -10,13 +9,13 @@ const promises = ["Luôn lắng nghe những điều Diễm muốn kể", "Cùng
 export default function Home() {
   const audioRef = useRef<HTMLAudioElement>(null);
   const [playing, setPlaying] = useState(false);
-  const [accepted, setAccepted] = useState(false);
+  const dialogRef = useRef<HTMLDialogElement>(null);
   const [thinking, setThinking] = useState(false);
   const [typedText, setTypedText] = useState("");
   const confession = "Chiến không hứa sẽ hoàn hảo, nhưng Chiến hứa sẽ thật lòng, sẽ luôn dịu dàng và cùng Diễm viết nên câu chuyện của riêng hai đứa mình.";
 
   useEffect(() => {
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    if (window.matchMedia("(prefers-reduced-motion: reduce), (hover: none), (pointer: coarse)").matches) {
       setTypedText(confession);
       return;
     }
@@ -35,7 +34,7 @@ export default function Home() {
   };
 
   const sayYes = async () => {
-    setAccepted(true);
+    dialogRef.current?.showModal();
     if (audioRef.current && !playing) {
       await audioRef.current.play().catch(() => undefined);
     }
@@ -66,7 +65,7 @@ export default function Home() {
         <div className="portrait-wrap">
           <div className="portrait-glow" />
           <div className="portrait-card">
-            <Image src="/images/diem.jpg" alt="Diễm trong khoảnh khắc thật xinh đẹp" fill priority sizes="(max-width: 900px) 88vw, 42vw" className="portrait" />
+            <Image src="/images/diem.jpg" alt="Diễm trong khoảnh khắc thật xinh đẹp" fill priority draggable={false} sizes="(max-width: 900px) 88vw, 42vw" className="portrait" />
             <div className="portrait-shade" />
             <div className="portrait-note"><span>cô gái khiến tim Chiến rung động</span><strong>Diễm ♡</strong></div>
           </div>
@@ -75,16 +74,16 @@ export default function Home() {
         </div>
       </section>
       <footer className="page-footer"><span />Dành riêng cho Diễm, bằng tất cả chân thành<Heart size={13} /><span /></footer>
-      <Dialog.Root open={accepted} onOpenChange={setAccepted}><Dialog.Portal><Dialog.Overlay className="celebration">
+      <dialog ref={dialogRef} className="celebration-dialog" aria-labelledby="celebration-title" aria-describedby="celebration-description">
         <div className="confetti" aria-hidden="true">{Array.from({ length: 28 }).map((_, index) => <i key={index} style={{ "--i": index } as React.CSSProperties} />)}</div>
-        <Dialog.Content className="celebration-card">
+        <div className="celebration-card">
           <div className="big-heart">♥</div><p className="eyebrow">Vậy là từ hôm nay...</p>
-          <Dialog.Title>Diễm là người yêu của Chiến rồi nhé!</Dialog.Title>
-          <Dialog.Description>Cảm ơn Diễm đã bước vào thế giới của Chiến. Mình cùng nhau tạo thật nhiều kỷ niệm đẹp nha.</Dialog.Description>
+          <h2 id="celebration-title">Diễm là người yêu của Chiến rồi nhé!</h2>
+          <p id="celebration-description">Cảm ơn Diễm đã bước vào thế giới của Chiến. Mình cùng nhau tạo thật nhiều kỷ niệm đẹp nha.</p>
           <div className="couple-name">Chiến <Heart size={22} fill="currentColor" /> Diễm</div>
-          <button onClick={() => setAccepted(false)}>Ngắm lại lời tỏ tình</button>
-        </Dialog.Content>
-      </Dialog.Overlay></Dialog.Portal></Dialog.Root>
+          <button onClick={() => dialogRef.current?.close()}>Ngắm lại lời tỏ tình</button>
+        </div>
+      </dialog>
     </main>
   );
 }
