@@ -4,7 +4,7 @@
 
 :root { --wine: #7b1d3b; --rose: #c54168; --ink: #3c2028; }
 * { box-sizing: border-box; }
-html { scroll-behavior: smooth; }
+html { scroll-behavior: smooth; overflow-x: clip; }
 body { margin: 0; color: var(--ink); background: #f5ddd9; }
 button { font: inherit; }
 .love-page { min-height: 100svh; position: relative; overflow: hidden; display: grid; place-items: center; padding: 56px 5vw; background: radial-gradient(circle at 72% 18%, rgba(255,255,255,.95), transparent 28%), linear-gradient(135deg, #fff9f3 0%, #f9e2df 48%, #edc3c4 100%); }
@@ -51,7 +51,7 @@ h1 em { color: var(--wine); font-weight: 600; }
 @keyframes float { to { transform: translateY(-115vh) rotate(360deg); } }
 @keyframes confetti { to { transform: translateY(110vh) rotate(720deg); } }
 @media (max-width: 900px) {
-  .love-page { padding: 90px 22px 54px; overflow: auto; }
+  .love-page { padding: 90px 22px 54px; overflow: clip; }
   .hero { grid-template-columns: 1fr; min-height: auto; gap: 44px; }
   .portrait-wrap { grid-row: 1; width: min(390px, 88vw); }
   .portrait-card { height: min(530px, 120vw); }
@@ -60,6 +60,12 @@ h1 em { color: var(--wine); font-weight: 600; }
   .promise-list { display: inline-grid; text-align: left; }
   .actions { justify-content: center; flex-wrap: wrap; }
   .polaroid-note { right: -12px; }
+}
+.ambient, .confetti { pointer-events: none; }
+.celebration { overflow-y: auto; padding-top: 64px; padding-bottom: 32px; }
+.celebration-card { margin-block: auto; }
+@media (max-height: 600px) {
+  .celebration { align-items: start; }
 }
 @media (max-width: 520px) {
   .music-button span { display: none; }
